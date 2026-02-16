@@ -5,7 +5,7 @@
 #include <time.h>
 
 #define RANDWRITE_IMPLEMENTATION
-#include "randwrite.h"
+#include "randxoshiro.h"
 
 char** next_arg(int *argc, char ***argv)
 {

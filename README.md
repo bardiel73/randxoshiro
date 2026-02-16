@@ -1,36 +1,37 @@
-# randwrite
+# randxoshiro
 * Use `xoshiro256++` PRNG to generate random numbers in C with a header-only library.
 * Write random bytes to a binary file using the CLI tool.
 
-## Build
-* Build with command below or run `rwcli.bat`
-```sh
-gcc rwcli.c -o rwcli.exe -O3 -s
-```
-## Usage
-### CLI
-* To write 10 random 64 bit numbers (80 random bytes) to specified path `myfileee`, run:
-```sh
-./rwcli 10 -o myfileee
-```
-### Header-Only Library
+## Header-Only Library
 ```c
 #define RANDWRITE_IMPLEMENTATION
-#include "randwrite.h"
+#include "randxoshiro.h"
 
 #include <stdio.h>
 #include <time.h>
 
 int main(void)
 {
-    xo_state rng = {0};
-    srand_xo(&rng, time(0));
+    xo_state state = {0};
+    srand_xo(&state, time(0)); // prefer to use stronger seed than time(0)
 
-    printf("Random number: %lld \n", (int64_t)rand_xo(&rng));
+    printf("Random number: %lld \n", (int64_t)rand_xo(&state));
 
     return 0;
 }
 ```
+## CLI
+### Build
+* Build with command below or run `rwcli.bat`
+```sh
+gcc rwcli.c -o rwcli.exe -O3 -s
+```
+### Usage
+* To write 10 random 64 bit numbers (80 random bytes) to specified path `myfileee`, run:
+```sh
+./rwcli 10 -o myfileee
+```
+
 ## Details
 * The CLI tool currently doesn't write "numbers" to a file, it writes randomized bytes directly. This allows easy reinterpration of the same random data e.g. as u64's or as i64's as u32's.
 * Xoshiro256++ PRNG's state is initialized using `splitmax64` PRNG to satisfy xoshiro256++ no-zero's requirement. The splitmax64 PRNG's state itself is currently only seeded with `time(0)`.
